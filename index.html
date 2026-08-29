@@ -5,114 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0b3d2e">
   <title>Lotto Optimizer V3 — Bonoloto</title>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
   <style>
     :root {
-      --bg: #071a14;
-      --card: #0e2f24;
-      --ink: #e8f5ef;
-      --muted: #8fb3a4;
-      --gold: #e8c547;
-      --accent: #2ecc71;
-      --danger: #e74c3c;
+      --bg: #071a14; --card: #0e2f24; --ink: #e8f5ef; --muted: #8fb3a4;
+      --gold: #e8c547; --accent: #2ecc71; --danger: #e74c3c;
       --pad: max(1rem, env(safe-area-inset-left));
     }
     * { box-sizing: border-box; }
     html { -webkit-text-size-adjust: 100%; }
     body {
-      margin: 0;
-      font-family: system-ui, Segoe UI, sans-serif;
+      margin: 0; font-family: system-ui, Segoe UI, sans-serif;
       background: radial-gradient(1200px 600px at 50% -10%, #145c43, var(--bg));
-      color: var(--ink);
-      min-height: 100dvh;
-      padding: 1rem var(--pad) 2.5rem;
-      line-height: 1.4;
+      color: var(--ink); min-height: 100dvh;
+      padding: 1rem var(--pad) 2.5rem; line-height: 1.4;
     }
     h1 { font-size: 1.35rem; margin: 0 0 .25rem; }
     .sub { color: var(--muted); font-size: .9rem; margin: 0 0 1rem; }
     .card {
-      background: var(--card);
-      border: 1px solid #1f5a44;
-      border-radius: 14px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+      background: var(--card); border: 1px solid #1f5a44;
+      border-radius: 14px; padding: 1rem; margin-bottom: 1rem;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .7rem;
-    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
     label { display: block; font-size: .75rem; color: var(--muted); margin-bottom: .2rem; }
-    input, select, button, textarea {
-      font: inherit;
-      font-size: 16px;
-      width: 100%;
-    }
+    input, select, button, textarea { font: inherit; font-size: 16px; width: 100%; }
     input, select {
-      background: #08241b;
-      color: var(--ink);
-      border: 1px solid #2a6b52;
-      border-radius: 10px;
-      padding: .65rem .7rem;
+      background: #08241b; color: var(--ink); border: 1px solid #2a6b52;
+      border-radius: 10px; padding: .65rem .7rem;
     }
     .actions { display: flex; gap: .6rem; margin-top: .9rem; }
     button {
-      border: 0;
-      border-radius: 12px;
-      padding: .85rem 1rem;
-      font-weight: 700;
-      min-height: 48px;
+      border: 0; border-radius: 12px; padding: .85rem 1rem;
+      font-weight: 700; min-height: 48px;
     }
     .go { background: var(--gold); color: #1a1403; }
     .go:disabled { opacity: .55; }
-    .stop { background: var(--danger); color: #fff; display: none; }
-    .stop.on { display: block; }
     .metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: .5rem;
-      text-align: center;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: .5rem; text-align: center;
     }
     .metrics b { display: block; font-size: 1.15rem; color: var(--gold); }
     .metrics span { font-size: .72rem; color: var(--muted); }
-    .bar {
-      height: 10px;
-      background: #08241b;
-      border-radius: 99px;
-      overflow: hidden;
-      margin: .8rem 0 .4rem;
-    }
-    .bar > i {
-      display: block;
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, #1abc9c, var(--gold));
-    }
-    .balls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .35rem;
-      margin: .35rem 0 .7rem;
-    }
+    .balls { display: flex; flex-wrap: wrap; gap: .35rem; margin: .35rem 0 .7rem; }
     .ball {
-      width: 2.15rem;
-      height: 2.15rem;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
+      width: 2.15rem; height: 2.15rem; border-radius: 50%;
+      display: grid; place-items: center;
       background: radial-gradient(circle at 30% 30%, #fff6c4, var(--gold));
-      color: #1a1403;
-      font-weight: 800;
-      font-size: .85rem;
+      color: #1a1403; font-weight: 800; font-size: .85rem;
     }
     .row { font-size: .78rem; color: var(--muted); }
     textarea {
-      min-height: 8rem;
-      background: #08241b;
-      color: var(--ink);
-      border: 1px solid #2a6b52;
-      border-radius: 10px;
-      padding: .7rem;
-      resize: vertical;
+      min-height: 8rem; background: #08241b; color: var(--ink);
+      border: 1px solid #2a6b52; border-radius: 10px; padding: .7rem; resize: vertical;
     }
     .hint { color: var(--muted); font-size: .8rem; }
     a { color: var(--gold); }
@@ -122,22 +66,22 @@
 <body>
   <header>
     <h1>Lotto Optimizer V3</h1>
-    <p class="sub">Bonoloto / covering. Ábrelo en el móvil y genera apuestas en el navegador.</p>
+    <p class="sub">Web que carga y ejecuta <code>JamCat61.py</code> en el navegador (Pyodide).</p>
   </header>
 
-  <form class="card" id="form" onsubmit="return false">
+  <form class="card" onsubmit="return false">
     <div class="grid">
       <div><label for="v">v (números)</label><input id="v" type="number" min="2" max="49" value="49"></div>
       <div><label for="k">k (por apuesta)</label><input id="k" type="number" min="1" max="20" value="6"></div>
       <div><label for="t">t (garantía)</label><input id="t" type="number" min="1" max="10" value="3"></div>
       <div><label for="m">m (sorteo)</label><input id="m" type="number" min="1" max="20" value="6"></div>
-      <div><label for="nBets">Apuestas</label><input id="nBets" type="number" min="1" max="200" value="30"></div>
-      <div><label for="secs">Segundos</label><input id="secs" type="number" min="2" max="60" value="8"></div>
+      <div><label for="nBets">Apuestas</label><input id="nBets" type="number" min="1" max="80" value="20"></div>
+      <div><label for="secs">Segundos</label><input id="secs" type="number" min="2" max="20" value="6"></div>
       <div>
         <label for="uni">Sorteos simulados</label>
         <select id="uni">
-          <option value="1000">1000 (rápido)</option>
-          <option value="2000" selected>2000</option>
+          <option value="800" selected>800 (móvil)</option>
+          <option value="2000">2000</option>
           <option value="5000">5000</option>
         </select>
       </div>
@@ -152,8 +96,7 @@
       </div>
     </div>
     <div class="actions">
-      <button class="go" id="btnGo" type="button">Optimizar</button>
-      <button class="stop" id="btnStop" type="button">Parar</button>
+      <button class="go" id="btnGo" type="button">Optimizar con Python</button>
     </div>
     <p class="hint" id="record"></p>
   </form>
@@ -164,163 +107,25 @@
       <div><b id="mBets">—</b><span>Apuestas</span></div>
       <div><b id="mCic">—</b><span>Ciclos</span></div>
     </div>
-    <div class="bar"><i id="bar"></i></div>
-    <p class="hint" id="status">Pulsa Optimizar. Corre entero en el teléfono, sin servidor.</p>
+    <p class="hint" id="status">Cargando el intérprete Python…</p>
     <div id="preview"></div>
-    <textarea id="out" readonly placeholder="Las apuestas aparecerán aquí"></textarea>
+    <textarea id="out" readonly placeholder="Las apuestas saldrán de JamCat61.py"></textarea>
     <div class="actions">
       <button class="go" id="btnCopy" type="button">Copiar</button>
     </div>
   </section>
 
-  <p class="hint">Código: <a href="https://github.com/Marcos1995/bonoloto">https://github.com/Marcos1995/bonoloto</a></p>
+  <p class="hint">Repo: <a href="https://github.com/Marcos1995/bonoloto">https://github.com/Marcos1995/bonoloto</a></p>
 
   <script>
-    const VELOCIDAD = {
-      TURBO: { factor: 0.985, umbral: 300, ratio: 0.75 },
-      RAPIDA: { factor: 0.990, umbral: 500, ratio: 0.8 },
-      MEDIA: { factor: 0.995, umbral: 800, ratio: 0.85 },
-      LENTA: { factor: 0.998, umbral: 1200, ratio: 0.9 }
-    };
     const RECORDS = {
       "49-6-3-6": 163, "49-6-4-6": 1184, "49-6-5-6": 11333,
       "49-6-3-5": 101, "49-6-4-5": 709, "49-6-3-4": 63, "49-6-4-4": 431, "49-6-3-3": 36
     };
-
-    function listaABits(nums) {
-      let b = 0n;
-      for (const n of nums) b |= 1n << BigInt(n - 1);
-      return b;
-    }
-    function bitsALista(bits, v) {
-      const out = [];
-      for (let i = 0; i < v; i++) if (bits & (1n << BigInt(i))) out.push(i + 1);
-      return out;
-    }
-    function popcount(x) {
-      let n = 0;
-      while (x) { x &= x - 1n; n++; }
-      return n;
-    }
-    function sample(pool, n) {
-      const a = pool.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a.slice(0, n);
-    }
-    function range(v) {
-      return Array.from({ length: v }, (_, i) => i + 1);
-    }
-
-    class Optimizer {
-      constructor(cfg) {
-        this.v = cfg.v; this.k = cfg.k; this.t = cfg.t; this.m = cfg.m;
-        this.universo = [];
-        for (let i = 0; i < cfg.universo; i++) {
-          this.universo.push(listaABits(sample(range(cfg.v), cfg.m)));
-        }
-        this.apuestas = [];
-        this.conteos = new Int16Array(cfg.universo);
-        this.temp = 1;
-        this.factor = cfg.factor;
-        this.umbral = cfg.umbral;
-        this.ratio1 = cfg.ratio;
-        this.ciclos = 0;
-        this.sinMejora = 0;
-        this.mejor = 0;
-      }
-      cobertura() {
-        let c = 0;
-        for (const n of this.conteos) if (n > 0) c++;
-        return (c / this.universo.length) * 100;
-      }
-      add(nums) {
-        const bits = listaABits(nums);
-        this.apuestas.push(bits);
-        const t = this.t;
-        for (let i = 0; i < this.universo.length; i++) {
-          if (popcount(bits & this.universo[i]) >= t) this.conteos[i]++;
-        }
-      }
-      generar(n) {
-        for (let i = 0; i < n; i++) this.add(sample(range(this.v), this.k));
-        this.mejor = this.cobertura();
-      }
-      mutar(bits) {
-        const nums = bitsALista(bits, this.v);
-        const disp = range(this.v).filter((x) => !nums.includes(x));
-        const nChange = Math.random() < this.ratio1 ? 1 : 2;
-        const k = Math.min(nChange, nums.length, disp.length);
-        const quitar = sample(nums, k);
-        const poner = sample(disp, k);
-        const next = nums.filter((x) => !quitar.includes(x)).concat(poner);
-        return listaABits(next);
-      }
-      ganancia(idx, nueva) {
-        const antigua = this.apuestas[idx];
-        const t = this.t;
-        let g = 0;
-        for (let i = 0; i < this.universo.length; i++) {
-          const s = this.universo[i];
-          const antes = popcount(antigua & s) >= t;
-          const ahora = popcount(nueva & s) >= t;
-          if (antes && !ahora && this.conteos[i] === 1) g--;
-          else if (!antes && ahora && this.conteos[i] === 0) g++;
-        }
-        return g;
-      }
-      aplicar(idx, nueva) {
-        const antigua = this.apuestas[idx];
-        const t = this.t;
-        for (let i = 0; i < this.universo.length; i++) {
-          const s = this.universo[i];
-          if (popcount(antigua & s) >= t) this.conteos[i]--;
-          if (popcount(nueva & s) >= t) this.conteos[i]++;
-        }
-        this.apuestas[idx] = nueva;
-      }
-      paso() {
-        this.ciclos++;
-        this.sinMejora++;
-        const idx = Math.floor(Math.random() * this.apuestas.length);
-        const nueva = this.mutar(this.apuestas[idx]);
-        const g = this.ganancia(idx, nueva);
-        let ok = false;
-        if (g > 0) ok = true;
-        else if (this.temp > 0.0001 && g >= -15) {
-          const cob = this.cobertura();
-          const escala = Math.max(5, 50 * (1 - cob / 100));
-          ok = Math.random() < Math.exp(g / (this.temp * escala));
-        }
-        if (ok) {
-          this.aplicar(idx, nueva);
-          const cob = this.cobertura();
-          if (cob > this.mejor) {
-            this.mejor = cob;
-            this.sinMejora = 0;
-          }
-        }
-        if (this.ciclos % 1000 === 0) this.temp *= this.factor;
-        if (this.sinMejora >= this.umbral) {
-          this.temp = 1;
-          this.sinMejora = 0;
-        }
-      }
-      listas() {
-        return this.apuestas
-          .map((b) => bitsALista(b, this.v))
-          .sort((a, b) => {
-            for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return a[i] - b[i];
-            return 0;
-          });
-      }
-    }
-
-    let opt = null;
-    let running = false;
+    const VELS = new Set(["TURBO", "RAPIDA", "MEDIA", "LENTA", "ULTRA"]);
     const $ = (id) => document.getElementById(id);
+    let pyodide = null;
+    let ready = false;
 
     function params() {
       return {
@@ -329,73 +134,96 @@
         vel: $("vel").value
       };
     }
-    function validar(p) {
-      return p.t <= p.k && p.t <= p.m && p.k <= p.v && p.m <= p.v;
-    }
-    function pintar(delta) {
-      if (!opt) return;
-      const cob = opt.cobertura();
-      $("mCob").textContent = cob.toFixed(2) + "%";
-      $("mCob").style.color = delta != null && delta >= 0 ? "var(--accent)" : "var(--gold)";
-      $("mBets").textContent = String(opt.apuestas.length);
-      $("mCic").textContent = opt.ciclos.toLocaleString("es");
-      const listas = opt.listas();
-      $("out").value = listas.map((r) => r.map((n) => String(n).padStart(2, "0")).join(" ")).join("\n");
-      const prev = listas.slice(0, 6).map((r) => {
-        const balls = r.map((n) => `<span class="ball">${n}</span>`).join("");
-        return `<div class="row">Apuesta</div><div class="balls">${balls}</div>`;
-      }).join("");
-      $("preview").innerHTML = prev;
-    }
     function updateRecord() {
       const p = params();
       const rec = RECORDS[`${p.v}-${p.k}-${p.t}-${p.m}`];
       $("record").textContent = rec
-        ? `Récord Lotoideas para esta combinación: ${rec} apuestas.`
+        ? `Récord Lotoideas: ${rec} apuestas.`
         : "Sin récord interno para esta combinación.";
     }
     ["v", "k", "t", "m"].forEach((id) => $(id).addEventListener("input", updateRecord));
     updateRecord();
 
+    async function loadPyFile() {
+      const urls = [
+        "JamCat61.py",
+        "https://raw.githubusercontent.com/Marcos1995/bonoloto/main/JamCat61.py"
+      ];
+      let last = null;
+      for (const url of urls) {
+        try {
+          const r = await fetch(url);
+          if (r.ok) return await r.text();
+          last = new Error("HTTP " + r.status);
+        } catch (e) { last = e; }
+      }
+      throw last || new Error("No se pudo leer JamCat61.py");
+    }
+
+    async function boot() {
+      $("status").textContent = "Descargando Python (Pyodide)…";
+      pyodide = await loadPyodide();
+      $("status").textContent = "Cargando JamCat61.py…";
+      const src = await loadPyFile();
+      pyodide.FS.writeFile("JamCat61.py", src);
+      await pyodide.runPythonAsync("import JamCat61");
+      ready = true;
+      $("status").innerHTML = '<span class="ok">Python listo.</span> Pulsa Optimizar: ejecuta el fichero .py real.';
+    }
+    boot().catch((e) => {
+      $("status").textContent = "No se pudo arrancar Python: " + e.message;
+    });
+
     $("btnGo").onclick = async () => {
       const p = params();
-      if (!validar(p)) {
+      if (!ready) {
+        $("status").textContent = "Espera a que termine de cargar Python.";
+        return;
+      }
+      if (!(p.t <= p.k && p.t <= p.m && p.k <= p.v && p.m <= p.v)) {
         $("status").textContent = "Parámetros inválidos: t ≤ k, t ≤ m, k ≤ v y m ≤ v.";
         return;
       }
-      running = true;
+      if (!VELS.has(p.vel)) return;
       $("btnGo").disabled = true;
-      $("btnStop").classList.add("on");
-      $("status").textContent = "Generando universo…";
-      await new Promise((r) => setTimeout(r, 30));
-      const vel = VELOCIDAD[p.vel];
-      opt = new Optimizer({
-        v: p.v, k: p.k, t: p.t, m: p.m, universo: p.universo,
-        factor: vel.factor, umbral: vel.umbral, ratio: vel.ratio
-      });
-      opt.generar(p.nBets);
-      const cobIni = opt.cobertura();
-      pintar(0);
-      $("status").textContent = "Optimizando…";
-      const t0 = performance.now();
-      const maxMs = p.secs * 1000;
-      while (running && performance.now() - t0 < maxMs) {
-        for (let i = 0; i < 25; i++) opt.paso();
-        const pct = Math.min(100, ((performance.now() - t0) / maxMs) * 100);
-        $("bar").style.width = pct + "%";
-        pintar(opt.cobertura() - cobIni);
-        $("status").textContent = `Optimizando… ${pct.toFixed(0)}% · mejor ${opt.mejor.toFixed(2)}%`;
-        await new Promise((r) => setTimeout(r, 0));
+      $("status").textContent = "Ejecutando JamCat61.py (universo + annealing)…";
+      await new Promise((r) => setTimeout(r, 40));
+      try {
+        const json = await pyodide.runPythonAsync(`
+import json
+from JamCat61 import Configuracion, LottoOptimizerV3, Velocidad
+cfg = Configuracion(v=${p.v}, k=${p.k}, t=${p.t}, m=${p.m}, universo_size=${p.universo})
+opt = LottoOptimizerV3(cfg)
+opt.aplicar_velocidad(Velocidad.${p.vel})
+opt.generar_aleatorias(${p.nBets})
+cob_ini = opt.cobertura
+opt.optimizar(max_segundos=float(${p.secs}), interactivo=False)
+apuestas = opt.apuestas_como_listas()
+json.dumps({
+    "cobertura": opt.cobertura,
+    "delta": opt.cobertura - cob_ini,
+    "apuestas": opt.num_apuestas,
+    "ciclos": opt.ciclos,
+    "listas": apuestas,
+})
+`);
+        const r = JSON.parse(json);
+        $("mCob").textContent = r.cobertura.toFixed(2) + "%";
+        $("mBets").textContent = String(r.apuestas);
+        $("mCic").textContent = Number(r.ciclos).toLocaleString("es");
+        $("out").value = r.listas.map((row) => row.map((n) => String(n).padStart(2, "0")).join(" ")).join("\n");
+        $("preview").innerHTML = r.listas.slice(0, 6).map((row) => {
+          const balls = row.map((n) => `<span class="ball">${n}</span>`).join("");
+          return `<div class="row">Apuesta</div><div class="balls">${balls}</div>`;
+        }).join("");
+        const d = r.delta;
+        $("status").innerHTML = `<span class="ok">Listo (Python).</span> ${r.cobertura.toFixed(2)}% (${d >= 0 ? "+" : ""}${d.toFixed(2)}).`;
+      } catch (e) {
+        $("status").textContent = "Error en Python: " + e.message;
       }
-      $("bar").style.width = "100%";
-      const d = opt.cobertura() - cobIni;
-      $("status").innerHTML = `<span class="ok">Listo.</span> Cobertura ${opt.cobertura().toFixed(2)}% (${d >= 0 ? "+" : ""}${d.toFixed(2)}).`;
-      pintar(d);
-      running = false;
       $("btnGo").disabled = false;
-      $("btnStop").classList.remove("on");
     };
-    $("btnStop").onclick = () => { running = false; };
+
     $("btnCopy").onclick = async () => {
       const txt = $("out").value;
       if (!txt) return;
