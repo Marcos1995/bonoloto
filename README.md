@@ -8,11 +8,21 @@ Código principal: `JamCat61.py`.
 ## Setup
 
 ```bash
-pip install numpy
+pip install -r requirements.txt
 python JamCat61.py
 ```
 
 NumPy es opcional; sin él usa la implementación estándar.
+
+## Navegador / nube
+
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Marcos1995/bonoloto/main?urlpath=proxy/8501/)
+
+La primera carga en Binder puede tardar 1–2 minutos.
+
+```bash
+streamlit run app.py
+```
 
 ## Docs
 

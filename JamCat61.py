@@ -134,7 +134,10 @@ class Estadisticas:
 # ============================================================================
 def limpiar_pantalla():
     """Limpia la pantalla de la consola"""
-    os.system('cls' if os.name == 'nt' else 'clear')
+    try:
+        os.system('cls' if os.name == 'nt' else 'clear')
+    except Exception:
+        pass
 
 class BitUtils:
     """Utilidades optimizadas para operaciones de bits"""
@@ -948,7 +951,27 @@ class LottoOptimizerV3:
     # BUCLE PRINCIPAL DE OPTIMIZACIÓN
     # -------------------------------------------------------------------------
 
-    def optimizar(self, objetivo_pct: Optional[float] = None) -> None:
+    def aplicar_velocidad(self, velocidad: Velocidad) -> None:
+        """Aplica un perfil de velocidad sin menú interactivo"""
+        self.velocidad = velocidad
+        self.factor_enfriamiento = velocidad.factor_enfriamiento
+        self.umbral_estancamiento = velocidad.umbral_estancamiento
+        self.ratio_mutacion_1num = velocidad.ratio_mutacion_1num
+        self.temperatura_inicial = 1.0
+        self.temperatura = self.temperatura_inicial
+
+    def apuestas_como_listas(self) -> List[List[int]]:
+        """Devuelve las apuestas como listas de números ordenados"""
+        apuestas = []
+        for bits in self.apuestas_bits:
+            apuestas.append(sorted(BitUtils.bits_a_lista(bits, self.config.v)))
+        apuestas.sort(key=lambda x: tuple(x))
+        return apuestas
+
+    def optimizar(self, objetivo_pct: Optional[float] = None,
+                  max_ciclos: Optional[int] = None,
+                  max_segundos: Optional[float] = None,
+                  interactivo: bool = True) -> None:
         """Bucle principal de optimización"""
         if self.num_apuestas == 0:
             self.logger.error("No hay apuestas para optimizar")
@@ -961,16 +984,24 @@ class LottoOptimizerV3:
 
         self.logger.info(f"Cobertura inicial: {self.mejor_cobertura:.4f}%")
 
-        # Configurar velocidad
-        self.configurar_velocidad()
+        if interactivo:
+            self.configurar_velocidad()
+            limpiar_pantalla()
+            print("=" * 70)
+            print(" OPTIMIZANDO - Ctrl+C para menú")
+            print("=" * 70)
+        else:
+            self.temperatura = self.temperatura_inicial
 
-        limpiar_pantalla()
-        print("=" * 70)
-        print(" OPTIMIZANDO - Ctrl+C para menú")
-        print("=" * 70)
+        tiempo_inicio = time.time()
 
         try:
             while True:
+                if max_ciclos is not None and self.ciclos >= max_ciclos:
+                    break
+                if max_segundos is not None and (time.time() - tiempo_inicio) >= max_segundos:
+                    break
+
                 # Verificar objetivo
                 if objetivo_pct and self.mejor_cobertura >= objetivo_pct:
                     print(f"\n\n 🎯 ¡OBJETIVO ALCANZADO! {self.mejor_cobertura:.4f}%")
@@ -1032,26 +1063,24 @@ class LottoOptimizerV3:
                         # Guardar snapshot
                         self._guardar_snapshot()
 
-                        # Guardar archivo
-                        archivo = self.guardar()
+                        if interactivo:
+                            archivo = self.guardar()
+                            limpiar_pantalla()
+                            print("=" * 70)
+                            print(f" 🎯 NUEVO RÉCORD: {self.mejor_cobertura:.6f}% (+{mejora:.6f}%)")
+                            print(f" 📁 {archivo}")
+                            print(f" 📊 Apuestas: {self.num_apuestas}")
+                            print(f" 🌡️ Temp: {self.temperatura:.4f} | {self.velocidad.nombre}")
+                            print(f" 📈 Mejoras totales: {self.stats.mejoras_totales}")
+                            print(f" 🛡️ Protección: {self.stats.caidas_bloqueadas} caídas / "
+                                  f"{self.stats.restauraciones} restauraciones")
 
-                        # Mostrar mejora
-                        limpiar_pantalla()
-                        print("=" * 70)
-                        print(f" 🎯 NUEVO RÉCORD: {self.mejor_cobertura:.6f}% (+{mejora:.6f}%)")
-                        print(f" 📁 {archivo}")
-                        print(f" 📊 Apuestas: {self.num_apuestas}")
-                        print(f" 🌡️ Temp: {self.temperatura:.4f} | {self.velocidad.nombre}")
-                        print(f" 📈 Mejoras totales: {self.stats.mejoras_totales}")
-                        print(f" 🛡️ Protección: {self.stats.caidas_bloqueadas} caídas / "
-                              f"{self.stats.restauraciones} restauraciones")
+                            if self.analizador.cantidad > 0:
+                                stats_real = self.analizador.validar(self.apuestas_bits)
+                                print(f" ✅ REAL: {stats_real['cobertura_pct']:.2f}%")
 
-                        if self.analizador.cantidad > 0:
-                            stats_real = self.analizador.validar(self.apuestas_bits)
-                            print(f" ✅ REAL: {stats_real['cobertura_pct']:.2f}%")
-
-                        print(" [Ctrl+C para menú]")
-                        print("=" * 70)
+                            print(" [Ctrl+C para menú]")
+                            print("=" * 70)
                 else:
                     self.stats.mutaciones_rechazadas += 1
 
@@ -1062,13 +1091,15 @@ class LottoOptimizerV3:
                 # Enfriamiento y progreso
                 if self.ciclos % 1000 == 0:
                     self.temperatura *= self.factor_enfriamiento
-                    self._mostrar_progreso()
+                    if interactivo:
+                        self._mostrar_progreso()
 
         except KeyboardInterrupt:
-            if self._menu_pausa():
+            if interactivo and self._menu_pausa():
                 limpiar_pantalla()
                 print(" Reanudando optimización...")
-                self.optimizar(objetivo_pct)
+                self.optimizar(objetivo_pct, max_ciclos=max_ciclos,
+                               max_segundos=max_segundos, interactivo=interactivo)
 
     # -------------------------------------------------------------------------
     # RÉCORDS Y BENCHMARK (NUEVO)

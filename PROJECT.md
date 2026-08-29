@@ -2,8 +2,8 @@
 # Contexto del proyecto
 
 ## Produccion
-- URL:
-- Deploy: local / CLI
+- URL: https://mybinder.org/v2/gh/Marcos1995/bonoloto/main?urlpath=proxy/8501/
+- Deploy: Streamlit (`app.py`) / Binder / CLI
 
 ## Stack
 - Python 3 (stdlib + NumPy opcional)
@@ -13,6 +13,8 @@
 - Instalar: `pip install numpy`
 - Test: `python -c "import ast; ast.parse(open('JamCat61.py', encoding='utf-8').read())"`
 - Dev: `python JamCat61.py`
+- Web: `streamlit run app.py`
+- Nube (navegador): https://mybinder.org/v2/gh/Marcos1995/bonoloto/main?urlpath=proxy/8501/
 
 ## Notas para el agente
 - Codigo fuente principal: `JamCat61.py` (ya en el repo)
