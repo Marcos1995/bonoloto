@@ -1,0 +1,14 @@
+---
+description: Context and token discipline for every task
+alwaysApply: true
+---
+
+# Context lean
+
+- Search first: grep/glob to locate, then read only the files you will touch.
+- Never re-read unchanged files or re-list the tree; trust what you already saw.
+- Reference paths instead of pasting file contents into replies, prompts, or docs.
+- Don't dump long command output; keep only the failing lines.
+- Verify with the smallest command that proves the change (one test/check, not the whole suite).
+- Reuse existing helpers and patterns (grep for them) instead of writing near-duplicates.
+- Keep every reply short: no essays, no repeated diffs, no restating the plan.
