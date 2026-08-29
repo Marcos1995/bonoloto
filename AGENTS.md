@@ -15,4 +15,6 @@ Think → Plan → Build → Review → Test.
 
 `/review` loads `.cursor/skills/review`. Keep context small.
 
+Vista: HTML en el repo que se abre en el navegador. Enlace oficial solo `https://github.com/<owner>/<repo>` (nada de previews externos).
+
 Kit synced by telegram-cursor-bot

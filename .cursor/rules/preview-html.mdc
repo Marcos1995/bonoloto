@@ -1,0 +1,12 @@
+---
+description: Vista en el navegador y enlace oficial de GitHub
+alwaysApply: true
+---
+
+# Preview HTML + GitHub.com
+
+- Todo repo debe poder verse en el navegador: HTML real que renderice la app (o una demo usable), no solo el listado de GitHub.
+- Sitio típico: `index.html` en la raíz (o el HTML de entrada del proyecto). Si el backend es Python, el HTML sigue siendo la vista; no sustituyas la UI por un host externo.
+- Enlace oficial único: `https://github.com/<owner>/<repo>`. Nunca htmlpreview, githack, CodePen, Vercel, Netlify ni otras webs de preview.
+- GitHub.com muestra el código; para verlo renderizado abre el HTML en local (doble clic o `python -m http.server` en el repo).
+- En HECHO incluye ese enlace github.com. No despliegues a dominios de terceros salvo que lo pidan.
